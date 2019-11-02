@@ -4,15 +4,13 @@ class CustomColors {
   static const bianco = Color(0xFFFFFFFF);
   static const biancoCard = Color(0xFFEEEEEE);
   static const azzurro = Color(0xFF6CD6D3);
-  static const revee = Color(0xFFE20074);
-  static const reveePallido = Color(0xFFE962AA);
   static const rosa = Color(0xFFDB3D8C);
   static const rosso = Color(0xffFF1744);
   static const giallo = Color(0xFFDDDD3C);
   static const viola = Color(0xFF9C1AB2);
   static const violaScuro = Color(0xFF241D2D);
   static const rosaSemitrasparente = Color(0xAAE962AA);
-  static const neroRevee = Color(0xFF161329);
+  static const neroMuted = Color(0xFF161329);
   static const grigioChiaro = Color(0xFF888888);
   static const grigio = Color(0xFF333333);
   static const grigioScuro = Color(0xFF2A2A2A);
@@ -61,7 +59,7 @@ final colorTheme = ThemeData(
     onSecondary: CustomColors.bianco,
     onSurface: CustomColors.bianco,
     onBackground: CustomColors.bianco,
-    onError: CustomColors.neroRevee,
+    onError: CustomColors.neroMuted,
     brightness: Brightness.light,
   ),
 
@@ -76,7 +74,6 @@ final colorTheme = ThemeData(
     title: TextStyle(color: CustomColors.blueTiffany),
     body1: TextStyle(color: const Color(0xff333333)),
     body2: TextStyle(color: const Color(0xff202020)),
-    //quello del drawer
     subhead: TextStyle(color: CustomColors.grigioScuro),
     button: TextStyle(color: CustomColors.biancoCard),
   ),
