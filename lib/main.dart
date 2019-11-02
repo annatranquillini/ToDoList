@@ -3,12 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:to_do_list/toToListTab.dart';
 
-import 'Colors.dart';
-import 'ProfileTab.dart';
-import 'ToDo.dart';
-import 'User.dart';
+import 'DataModels/Colors.dart';
+import 'DataModels/ToDo.dart';
+import 'DataModels/User.dart';
+import 'Tabs/ProfileTab.dart';
+import 'Tabs/toToListTab.dart';
+
 
 
 int uId = 1;
