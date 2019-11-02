@@ -10,7 +10,7 @@ import 'ProfileTab.dart';
 import 'ToDo.dart';
 import 'User.dart';
 
-import 'NewWidget.dart';
+
 int uId = 1;
 String baseURL = "https://jsonplaceholder.typicode.com";
 void main() => runApp(MyApp());
@@ -52,11 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewWidget())),
-          backgroundColor: CustomColors.blueTiffany,
-          child: Icon(Icons.playlist_add),
-        ),
+
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
