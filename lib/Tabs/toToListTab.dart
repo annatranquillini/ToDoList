@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:to_do_list/DataModels/Colors.dart';
+import 'package:to_do_list/DataModels/ToDo.dart';
 
-import 'Colors.dart';
-import 'ToDo.dart';
 
 class ToDoListTab extends StatefulWidget {
   final Future<List<ToDo>> future;
