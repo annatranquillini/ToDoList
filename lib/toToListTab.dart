@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import 'Colors.dart';
 import 'ToDo.dart';
 
 class ToDoListTab extends StatefulWidget {
@@ -13,35 +14,76 @@ class ToDoListTab extends StatefulWidget {
 }
 
 class _ToDoListTabState extends State<ToDoListTab> {
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<ToDo>>(
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
-              itemCount: snapshot.data == null ? 0 : snapshot.data.length,
+              itemCount: snapshot.data == null ? 0 : snapshot.data.length + 1,
               itemBuilder: (BuildContext context, i) {
-                bool val = snapshot.data[i].completed;
-                return new ListTile(
-                    title: Text(
-                      snapshot.data[i].title,
-                    ),
-                    leading: Checkbox(
-                      value: val,
-
-                      onChanged: (value) {
-                        setState(() {
-                          val=value;
-                        });
-                      },
-                    ));
+                return i == 0
+                    ? ListTile(
+                        title: Form(
+                          key: this._formKey,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value == '') {
+                                return 'Insert a value';
+                              } else
+                                return null;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: '...',
+                            ),
+                            onSaved: (value) {
+                              ToDo todo =
+                                  ToDo(title: value, completed: false, id: 1);
+                              snapshot.data.insert(0,todo);
+                              todo.put();
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        leading: Checkbox(
+                          value: false,
+                          onChanged: null,
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.add,
+                            color: CustomColors.blueTiffany,
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              _formKey.currentState.reset();
+                            }
+                          },
+                        ),
+                      )
+                    : ListTile(
+                        title: Text(
+                          snapshot.data[i - 1].title,
+                        ),
+                        leading: Checkbox(
+                          value: snapshot.data[i - 1].completed,
+                          onChanged: (value) {
+                            snapshot.data[i - 1].completed = value;
+                            ToDo todo = snapshot.data[i - 1];
+                            todo.patch();
+                            //patchToDo(todo);
+                            setState(() {});
+                          },
+                        ));
               });
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
 
         // By default, show a loading spinner.
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
       future: widget.future,
     );
