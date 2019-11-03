@@ -31,15 +31,15 @@ class _ProfileTabState extends State<ProfileTab> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CircleAvatar(
-                      radius: 42,
+                      radius: 43,
                       backgroundColor: CustomColors.blueTiffanyPallido,
                       child: CircleAvatar(
                         radius: 40,
                         child: Text(
-                          snapshot.data.name
+                          snapshot.data.name.trim()
                               .split(' ')
                               .map(
-                                (word) => word[0].toUpperCase(),
+                                (word) => word[0]?.toUpperCase()??'',
                           )
                               .join(),
                           style: TextStyle(color: Colors.black, fontSize: 20),
