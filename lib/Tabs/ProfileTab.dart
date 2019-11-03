@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/DataModels/Colors.dart';
 import 'package:to_do_list/DataModels/User.dart';
 
-
-
 Widget profileTab(Future<User> user) {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   return FutureBuilder<User>(
     builder: (context, snapshot) {
       if (snapshot.hasData) {
+        User.u = snapshot.data;
         var adr = snapshot.data.address;
         var cmp = snapshot.data.company;
         return Container(
@@ -42,56 +41,100 @@ Widget profileTab(Future<User> user) {
                   description: "Name",
                   info: snapshot.data.name,
                   icon: Icons.person,
+                  onSaved: (value) {
+                    User.u.name = value;
+                  },
                 ),
                 UserTile(
                   description: "Username",
                   info: snapshot.data.username,
                   icon: Icons.person_outline,
+                  onSaved: (value) {
+                    User.u.username = value;
+                  },
                 ),
                 UserTile(
                   description: "Phone number",
                   info: snapshot.data.phone,
                   icon: Icons.phone,
+                  onSaved: (value) {
+                    User.u.phone = value;
+                  },
                 ),
                 UserTile(
                   description: "Website",
                   info: snapshot.data.website,
                   icon: Icons.web,
+                  onSaved: (value) {
+                    User.u.website = value;
+                  },
                 ),
                 UserTile(
                   description: "Email",
                   info: snapshot.data.email,
                   icon: Icons.email,
+                  onSaved: (value) {
+                    User.u.email = value;
+                  },
                 ),
                 UserTile(
                   description: "Address",
                   info: adr.suite,
                   icon: Icons.location_city,
+                  onSaved: (value) {
+                    User.u.address.street = value;
+                  },
                 ),
                 UserTile(
                   info: adr.street,
+                  onSaved: (value) {
+                    User.u.address.street = value;
+                  },
                 ),
                 UserTile(
                   info: adr.city,
+                  onSaved: (value) {
+                    User.u.address.city = value;
+                  },
                 ),
                 UserTile(
                   info: adr.zipCode,
+                  onSaved: (value) {
+                    User.u.address.zipCode = value;
+                  },
                 ),
                 UserTile(
                   description: "Company",
-                  info: cmp.name + '\n' + cmp.catchPhrase + " - " + cmp.bs,
+                  info: cmp.name,
                   icon: Icons.work,
+                  onSaved: (value) {
+                    User.u.company.name = value;
+                  },
                 ),
-                UserTile(info: "\"" + cmp.catchPhrase + "\""),
-                UserTile(info: cmp.bs),
+                UserTile(
+                  info: "\"" + cmp.catchPhrase + "\"",
+                  onSaved: (value) {
+                    User.u.company.catchPhrase = value;
+                  },
+                ),
+                UserTile(
+                  info: cmp.bs,
+                  onSaved: (value) {
+                    User.u.company.bs = value;
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: FlatButton(
                     color: CustomColors.blueTiffany,
-                    child: const Text('Submit changes', style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      'Submit changes',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
+                        User.u.patch();
                       }
                     },
                   ),
@@ -115,11 +158,13 @@ class UserTile extends StatelessWidget {
   final String description;
   final String info;
   final IconData icon;
+  final Function onSaved;
 
   UserTile({
     this.description = '',
     this.info,
     this.icon,
+    this.onSaved,
   });
 
   @override
@@ -127,7 +172,7 @@ class UserTile extends StatelessWidget {
     return ListTile(
       subtitle: TextFormField(
         onSaved: (value) {
-
+          onSaved(value);
         },
         validator: (value) {
           if (value == '') {
