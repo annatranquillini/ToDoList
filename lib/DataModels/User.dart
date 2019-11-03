@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class User {
+  static User u = User();
   int id = 1;
   String name;
   String username;
@@ -44,8 +45,8 @@ class User {
       'email': email,
       'phone': phone,
       'website': website,
-      'company': company.toJson(),
-      'address': address.toJson()
+      'company': jsonEncode(company.toJson()),
+      'address': jsonEncode(address.toJson())
     };
   }
 
@@ -53,10 +54,10 @@ class User {
     String URL = 'https://jsonplaceholder.typicode.com/users/1';
     print(this.toJson());
     final response = await http.patch(URL, body: this.toJson());
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
-      this.id = parsed['id'] as int;
+
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to patch user');
@@ -64,4 +65,19 @@ class User {
 
     return;
   }
+
+  Future<User> fetch() async {
+    final response =
+    await http.get('https://jsonplaceholder.typicode.com/users/1');
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return User.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+
 }
