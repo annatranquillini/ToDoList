@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    user = fetchUser();
+    user = User.u.fetch();
     todos = fetchToDos();
   }
 
@@ -67,25 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         body: TabBarView(
-          children: [ToDoListTab(future: todos), profileTab(user)],
+          children: [ToDoListTab(future: todos),profileTab(user)],
         ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }
 }
 
-Future<User> fetchUser() async {
-  final response =
-      await http.get('https://jsonplaceholder.typicode.com/users/1');
-
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    return User.fromJson(json.decode(response.body));
-  } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
-  }
-}
 
 Future<List<ToDo>> fetchToDos() async {
   final response =
