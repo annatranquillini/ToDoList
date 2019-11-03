@@ -1,7 +1,9 @@
 import 'Address.dart';
+import 'Colors.dart';
 import 'Company.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class User {
   static User u = User();
@@ -50,14 +52,19 @@ class User {
     };
   }
 
-  patch() async {
+  patch(BuildContext context) async {
     String URL = 'https://jsonplaceholder.typicode.com/users/1';
     print(this.toJson());
     final response = await http.patch(URL, body: this.toJson());
 
     if (response.statusCode == 200) {
-      final parsed = json.decode(response.body);
 
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: CustomColors.blueTiffany,
+          content: Text(
+            "Your changes have been carried out successfully",
+            style: TextStyle(color: Colors.white),
+          )));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to patch user');
