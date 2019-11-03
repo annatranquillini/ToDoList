@@ -28,7 +28,7 @@ class Address {
       'street': street,
       'suite': suite ?? '',
       'city': city,
-      'zipCode': zipCode,
+      'zipcode': zipCode,
     };
   }
 
