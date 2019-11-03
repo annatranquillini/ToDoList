@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ToDo List',
       theme: colorTheme,
-      home: MyHomePage(title: 'ToDo '),
+      home: MyHomePage(title: 'ToDo ',),
     );
   }
 }
@@ -53,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
@@ -61,13 +60,20 @@ class _MyHomePageState extends State<MyHomePage> {
               Tab(text: "Profile", icon: Icon(Icons.supervised_user_circle)),
             ],
           ),
-          title: Text(
-            widget.title,
-            style: TextStyle(color: Colors.white),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                widget.title,
+                style: TextStyle(color: Colors.black),
+              ),
+              Icon(Icons.check),
+            ],
           ),
+          centerTitle: true,
         ),
         body: TabBarView(
-          children: [ToDoListTab(future: todos),profileTab(user)],
+          children: [ToDoListTab(future: todos),ProfileTab(future:user)],
         ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
