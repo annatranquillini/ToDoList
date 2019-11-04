@@ -73,13 +73,13 @@ class _ToDoListTabState extends State<ToDoListTab> {
                             snapshot.data[i - 1].completed = value;
                             ToDo todo = snapshot.data[i - 1];
                             todo.patch();
-                            //patchToDo(todo);
+
                             setState(() {});
                           },
                         ));
               });
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Center(child: Text("Connection Error"));
         }
 
         // By default, show a loading spinner.

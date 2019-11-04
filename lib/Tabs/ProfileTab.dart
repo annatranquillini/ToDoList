@@ -159,7 +159,7 @@ class _ProfileTabState extends State<ProfileTab> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Center(child: Text("Connection Error"));
         }
 
         // By default, show a loading spinner.
