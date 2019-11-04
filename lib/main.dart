@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
+import 'Bloc/ToDo/ToDo_Bloc.dart';
 import 'DataModels/Colors.dart';
 import 'DataModels/ToDo.dart';
 import 'DataModels/User.dart';
 import 'Tabs/ProfileTab.dart';
 import 'Tabs/toToListTab.dart';
-
-
 
 int uId = 1;
 String baseURL = "https://jsonplaceholder.typicode.com";
@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ToDo List',
       theme: colorTheme,
-      home: MyHomePage(title: 'ToDo ',),
+      home: MyHomePage(
+        title: 'ToDo ',
+      ),
     );
   }
 }
@@ -73,13 +75,18 @@ class _MyHomePageState extends State<MyHomePage> {
           centerTitle: true,
         ),
         body: TabBarView(
-          children: [ToDoListTab(future: todos),ProfileTab(future:user)],
+          children: [
+            BlocProvider(
+              child: ToDoListTab(future: todos),
+              builder: (BuildContext context) => TodosBloc(),
+            ),
+            ProfileTab(future: user)
+          ],
         ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }
 }
-
 
 Future<List<ToDo>> fetchToDos() async {
   final response =
@@ -95,4 +102,3 @@ Future<List<ToDo>> fetchToDos() async {
     throw Exception('Failed to load post');
   }
 }
-
