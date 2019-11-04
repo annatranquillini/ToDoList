@@ -1,13 +1,13 @@
-import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_list/DataModels/Colors.dart';
-import 'package:to_do_list/DataModels/ToDo.dart';
+
+import 'package:to_do_list/DataModels/DataModels.dart';
 import 'package:to_do_list/Bloc/ToDo/ToDo.dart';
 
 class ToDoListTab extends StatefulWidget {
-  final Future<List<ToDo>> future;
-  ToDoListTab({this.future});
+
+  ToDoListTab();
 
   @override
   _ToDoListTabState createState() => _ToDoListTabState();
@@ -94,3 +94,5 @@ class _ToDoListTabState extends State<ToDoListTab> {
     );
   }
 }
+
+
