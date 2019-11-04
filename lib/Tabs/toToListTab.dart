@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/DataModels/Colors.dart';
 import 'package:to_do_list/DataModels/ToDo.dart';
-
-
+import 'package:to_do_list/Bloc/ToDo/ToDo.dart';
 
 class ToDoListTab extends StatefulWidget {
   final Future<List<ToDo>> future;
@@ -17,11 +17,16 @@ class _ToDoListTabState extends State<ToDoListTab> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<ToDo>>(
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
+    return BlocBuilder<TodosBloc, TodosState>(
+      builder: (context, state) {
+        if (state is TodosLoading) {
+          BlocProvider.of<TodosBloc>(context)
+              .add(LoadTodos());
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state is TodosLoaded) {
           return ListView.builder(
-              itemCount: snapshot.data == null ? 0 : snapshot.data.length + 1,
+              itemCount: state.todos == null ? 0 : state.todos.length + 1,
               itemBuilder: (BuildContext context, i) {
                 return i == 0
                     ? ListTile(
@@ -40,8 +45,9 @@ class _ToDoListTabState extends State<ToDoListTab> {
                             onSaved: (value) {
                               ToDo todo =
                                   ToDo(title: value, completed: false, id: 1);
-                              snapshot.data.insert(0,todo);
-                              todo.post();
+                              BlocProvider.of<TodosBloc>(context)
+                                  .add(AddTodo(todo));
+
                               setState(() {});
                             },
                           ),
@@ -65,27 +71,26 @@ class _ToDoListTabState extends State<ToDoListTab> {
                       )
                     : ListTile(
                         title: Text(
-                          snapshot.data[i - 1].title,
+                          state.todos[i - 1].title,
                         ),
                         leading: Checkbox(
-                          value: snapshot.data[i - 1].completed,
+                          value: state.todos[i - 1].completed,
                           onChanged: (value) {
-                            snapshot.data[i - 1].completed = value;
-                            ToDo todo = snapshot.data[i - 1];
-                            todo.patch();
+                            ToDo todo=state.todos[i - 1];
+                            BlocProvider.of<TodosBloc>(context)
+                                .add(ToggleTodo(todo));
 
                             setState(() {});
                           },
                         ));
               });
-        } else if (snapshot.hasError) {
+        }
+        if (state is TodosNotLoaded) {
           return Center(child: Text("Connection Error"));
         }
 
-        // By default, show a loading spinner.
-        return Center(child: CircularProgressIndicator());
+        return Center(child: Text("Connection Error"));
       },
-      future: widget.future,
     );
   }
 }
