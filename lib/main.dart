@@ -1,14 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
-import 'Bloc/ToDo/ToDo_Bloc.dart';
+import 'Bloc/ToDo/ToDo.dart';
+import 'Bloc/Profile/Profile.dart';
 import 'DataModels/Colors.dart';
-import 'DataModels/ToDo.dart';
-import 'DataModels/User.dart';
+
 import 'Tabs/ProfileTab.dart';
 import 'Tabs/toToListTab.dart';
 
@@ -40,16 +36,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<User> user;
-  Future<List<ToDo>> todos;
-
-  @override
-  void initState() {
-    super.initState();
-    user = User.u.fetch();
-    todos = fetchToDos();
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -77,28 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
         body: TabBarView(
           children: [
             BlocProvider(
-              child: ToDoListTab(future: todos),
+              child: ToDoListTab(),
               builder: (BuildContext context) => TodosBloc(),
             ),
-            ProfileTab(future: user)
+            BlocProvider(
+              child: ProfileTab(),
+              builder: (BuildContext context) => ProfileBloc(),
+            )
           ],
         ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
-  }
-}
-
-Future<List<ToDo>> fetchToDos() async {
-  final response =
-      await http.get('https://jsonplaceholder.typicode.com/todos?userId=1');
-
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    var data = json.decode(response.body) as List;
-
-    return data.map<ToDo>((json) => ToDo.fromJson(json)).toList();
-  } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
   }
 }

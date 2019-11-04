@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:to_do_list/DataModels/ToDo.dart';
 
-import '../../main.dart';
-import 'ToDo_Event.dart';
-import 'ToDo_State.dart';
+import 'package:to_do_list/DataModels/DataModels.dart' ;
+import 'package:to_do_list/Bloc/ToDo/ToDo.dart';
 
 class TodosBloc extends Bloc<TodosEvent, TodosState> {
   TodosBloc();
@@ -50,4 +48,9 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
       todo.patch();
     }
   }
+
+
+
+
+
 }

@@ -65,3 +65,18 @@ class ToDo extends Equatable {
   @override
   List<Object> get props => [id];
 }
+
+Future<List<ToDo>> fetchToDos() async {
+  final response =
+  await http.get('https://jsonplaceholder.typicode.com/todos?userId=1');
+
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON
+    var data = json.decode(response.body) as List;
+
+    return data.map<ToDo>((json) => ToDo.fromJson(json)).toList();
+  } else {
+    // If that call was not successful, throw an error.
+    throw Exception('Failed to load post');
+  }
+}

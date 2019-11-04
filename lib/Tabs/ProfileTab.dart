@@ -1,28 +1,31 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:to_do_list/DataModels/Colors.dart';
-import 'package:to_do_list/DataModels/User.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+
+import 'package:to_do_list/Bloc/Profile/Profile.dart';
+import 'package:to_do_list/DataModels/DataModels.dart' show User, CustomColors;
 
 class ProfileTab extends StatefulWidget {
-  final Future<User> future;
-  ProfileTab({this.future});
+
+  ProfileTab();
 
   @override
   _ProfileTabState createState() => _ProfileTabState();
 }
 
-
 class _ProfileTabState extends State<ProfileTab> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-
-    return FutureBuilder<User>(
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          User.u = snapshot.data;
-          var adr = snapshot.data.address;
-          var cmp = snapshot.data.company;
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          BlocProvider.of<ProfileBloc>(context).add(LoadProfile());
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state is ProfileLoaded) {
+          var adr = state.user.address;
+          var cmp = state.user.company;
           return Container(
             child: Form(
               key: _formKey,
@@ -36,11 +39,12 @@ class _ProfileTabState extends State<ProfileTab> {
                       child: CircleAvatar(
                         radius: 40,
                         child: Text(
-                          snapshot.data.name.trim()
+                          state.user.name
+                              .trim()
                               .split(' ')
                               .map(
-                                (word) => word[0]?.toUpperCase()??'',
-                          )
+                                (word) => word[0]?.toUpperCase() ?? '',
+                              )
                               .join(),
                           style: TextStyle(color: Colors.black, fontSize: 20),
                         ),
@@ -50,7 +54,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   UserTile(
                     description: "Name",
-                    info: snapshot.data.name,
+                    info: state.user.name,
                     icon: Icons.person,
                     onSaved: (value) {
                       User.u.name = value;
@@ -58,7 +62,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   UserTile(
                     description: "Username",
-                    info: snapshot.data.username,
+                    info: state.user.username,
                     icon: Icons.person_outline,
                     onSaved: (value) {
                       User.u.username = value;
@@ -66,7 +70,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   UserTile(
                     description: "Phone number",
-                    info: snapshot.data.phone,
+                    info: state.user.phone,
                     icon: Icons.phone,
                     onSaved: (value) {
                       User.u.phone = value;
@@ -74,7 +78,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   UserTile(
                     description: "Website",
-                    info: snapshot.data.website,
+                    info: state.user.website,
                     icon: Icons.web,
                     onSaved: (value) {
                       User.u.website = value;
@@ -82,7 +86,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   UserTile(
                     description: "Email",
-                    info: snapshot.data.email,
+                    info: state.user.email,
                     icon: Icons.email,
                     onSaved: (value) {
                       User.u.email = value;
@@ -123,7 +127,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     },
                   ),
                   UserTile(
-                    info:  cmp.catchPhrase ,
+                    info: cmp.catchPhrase,
                     onSaved: (value) {
                       User.u.company.catchPhrase = value;
                     },
@@ -145,7 +149,9 @@ class _ProfileTabState extends State<ProfileTab> {
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          User.u.patch(context);
+                          BlocProvider.of<ProfileBloc>(context)
+                              .add(EditProfile(User.u, context));
+
                           setState(() {});
                         }
                       },
@@ -158,19 +164,16 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
             ),
           );
-        } else if (snapshot.hasError) {
+        }
+        if (state is ProfileNotLoaded) {
+          return Center(child: Text("Connection Error"));
+        } else {
           return Center(child: Text("Connection Error"));
         }
-
-        // By default, show a loading spinner.
-        return Center(child: CircularProgressIndicator());
       },
-      future: widget.future,
     );
-
   }
 }
-
 
 class UserTile extends StatelessWidget {
   final String description;
@@ -210,4 +213,3 @@ class UserTile extends StatelessWidget {
     );
   }
 }
-
