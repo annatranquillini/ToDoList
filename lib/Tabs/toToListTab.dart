@@ -41,7 +41,7 @@ class _ToDoListTabState extends State<ToDoListTab> {
                               ToDo todo =
                                   ToDo(title: value, completed: false, id: 1);
                               snapshot.data.insert(0,todo);
-                              todo.put();
+                              todo.post();
                               setState(() {});
                             },
                           ),
