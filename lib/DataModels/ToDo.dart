@@ -1,10 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
-class ToDo {
-  int id;
-  String title;
-  bool completed;
+
+class ToDo extends Equatable {
+   int id;
+  final String title;
+   bool completed;
 
   ToDo({
     this.id,
@@ -43,7 +45,7 @@ class ToDo {
     return;
   }
 
-  put() async {
+  post() async {
     String URL = 'https://jsonplaceholder.typicode.com/todos/';
     print(this.toJson());
     final response = await http.post(URL, body: this.toJson());
@@ -57,4 +59,9 @@ class ToDo {
 
     return;
   }
+
+
+
+  @override
+  List<Object> get props => [id];
 }
